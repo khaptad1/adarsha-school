@@ -7,7 +7,7 @@
 (function () {
   'use strict';
 
-  const API = 'http://localhost:3001';
+  const API = 'https://adarsha-school-production.up.railway.app';
 
   // ── IN-MEMORY CACHE ──────────────────────────────────────
   // Keeps data available synchronously (for getItem calls)
