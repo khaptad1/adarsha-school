@@ -1,0 +1,1779 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Admin Panel — Adarsha Sanothimi H.S. School</title>
+<style>
+/* ── FONTS ── */
+@import url('https://fonts.googleapis.com/css2?family=Libre+Baskerville:wght@400;700&family=Source+Sans+3:wght@300;400;500;600&display=swap');
+
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+
+:root,[data-theme="light"]{
+  --bg:#ffffff;--bg2:#ffffff;--bg3:#f7f7f7;
+  --text:#1a1917;--text2:#4a4845;--text3:#7a7875;
+  --border:#d8d5d0;--border2:#1a1917;
+  --primary:#1a1917;--primary-light:#f7f7f7;
+  --shadow:none;--input-bg:#fafafa;
+  --red:#c0392b;--green:#27ae60;--blue:#2980b9;--orange:#e67e22;
+}
+[data-theme="dark"]{
+  --bg:#121212;--bg2:#1e1e1e;--bg3:#2a2a2a;
+  --text:#f5f5f5;--text2:#cccccc;--text3:#888888;
+  --border:#333333;--border2:#ffffff;
+  --primary:#ffffff;--primary-light:#2a2a2a;
+  --shadow:none;--input-bg:#1a1a1a;
+  --red:#e74c3c;--green:#2ecc71;--blue:#3498db;--orange:#f39c12;
+}
+
+body{
+  font-family:'Source Sans 3',sans-serif;
+  background:var(--bg3);
+  color:var(--text);
+  line-height:1.6;
+  font-size:14.5px;
+  transition:background 0.2s,color 0.2s;
+}
+h1,h2,h3{font-family:'Libre Baskerville',serif;}
+h4,h5{font-family:'Source Sans 3',sans-serif;font-weight:600;}
+a{color:inherit;text-decoration:none;}
+button{font-family:'Source Sans 3',sans-serif;cursor:pointer;}
+input,select,textarea{font-family:'Source Sans 3',sans-serif;}
+
+/* ── LOGIN SCREEN ── */
+#loginScreen{
+  min-height:100vh;
+  display:flex;align-items:center;justify-content:center;
+  background:var(--bg3);
+}
+.login-card{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:10px;
+  padding:48px 44px;
+  max-width:400px;width:100%;
+  text-align:center;
+}
+.login-logo{font-size:52px;margin-bottom:16px;}
+.login-card h2{font-size:22px;margin-bottom:6px;}
+.login-card p{color:var(--text3);font-size:13.5px;margin-bottom:30px;}
+.login-card input{
+  width:100%;padding:12px 16px;
+  border:1px solid var(--border);border-radius:6px;
+  background:var(--input-bg);color:var(--text);
+  font-size:16px;text-align:center;letter-spacing:6px;
+  outline:none;margin-bottom:14px;
+  transition:border-color 0.15s;
+}
+.login-card input:focus{border-color:var(--border2);}
+.btn-login{
+  width:100%;padding:12px;
+  background:var(--text);color:var(--bg);
+  border:none;border-radius:6px;
+  font-size:14.5px;font-weight:600;
+  transition:opacity 0.15s;
+}
+.btn-login:hover{opacity:0.85;}
+.login-err{color:var(--red);font-size:13px;margin-top:10px;min-height:18px;}
+.login-hint{color:var(--text3);font-size:12px;margin-top:18px;}
+
+/* ── MAIN LAYOUT ── */
+#adminApp{display:none;min-height:100vh;}
+
+/* Top Bar */
+.topbar{
+  background:var(--bg);
+  border-bottom:1px solid var(--border);
+  height:58px;padding:0 24px;
+  display:flex;align-items:center;justify-content:space-between;
+  position:sticky;top:0;z-index:200;
+}
+.topbar-brand{
+  display:flex;align-items:center;gap:12px;
+  font-family:'Libre Baskerville',serif;
+  font-size:16px;font-weight:700;
+}
+.topbar-brand span{
+  font-family:'Source Sans 3',sans-serif;
+  font-size:11.5px;color:var(--text3);font-weight:400;
+  background:var(--bg3);border:1px solid var(--border);
+  padding:2px 10px;border-radius:20px;margin-left:6px;
+}
+.topbar-right{display:flex;align-items:center;gap:10px;}
+.btn-sm{
+  background:var(--bg);color:var(--text2);
+  border:1px solid var(--border);
+  padding:6px 14px;border-radius:4px;
+  font-size:12.5px;font-weight:500;
+  transition:border-color 0.15s,color 0.15s;
+}
+.btn-sm:hover{border-color:var(--border2);color:var(--text);}
+.btn-danger{
+  background:var(--bg);color:var(--red);
+  border:1px solid var(--red);
+  padding:6px 14px;border-radius:4px;
+  font-size:12.5px;font-weight:500;
+  transition:background 0.15s;
+}
+.btn-danger:hover{background:var(--red);color:#fff;}
+.btn-primary{
+  background:var(--text);color:var(--bg);
+  border:1px solid var(--text);
+  padding:8px 18px;border-radius:4px;
+  font-size:13px;font-weight:500;
+  transition:opacity 0.15s;
+}
+.btn-primary:hover{opacity:0.82;}
+
+/* ── SIDEBAR + CONTENT ── */
+.layout{display:flex;min-height:calc(100vh - 58px);}
+
+.sidebar{
+  width:220px;flex-shrink:0;
+  background:var(--bg);
+  border-right:1px solid var(--border);
+  padding:20px 0;
+  position:sticky;top:58px;
+  height:calc(100vh - 58px);
+  overflow-y:auto;
+}
+.sidebar-group{margin-bottom:6px;}
+.sidebar-label{
+  font-size:10.5px;font-weight:600;
+  color:var(--text3);text-transform:uppercase;
+  letter-spacing:1.2px;padding:8px 20px 4px;
+}
+.sidebar a{
+  display:flex;align-items:center;gap:10px;
+  padding:9px 20px;
+  font-size:13.5px;color:var(--text2);
+  cursor:pointer;
+  transition:background 0.1s,color 0.1s;
+  border-radius:0;
+}
+.sidebar a:hover{background:var(--bg3);color:var(--text);}
+.sidebar a.active{
+  background:var(--bg3);color:var(--text);
+  font-weight:600;
+  border-left:3px solid var(--border2);
+}
+.sidebar a .icon{font-size:15px;width:18px;text-align:center;}
+
+.content{flex:1;padding:32px;max-width:1000px;}
+
+/* ── PANELS ── */
+.panel{display:none;}
+.panel.active{display:block;}
+
+/* ── SECTION CARD ── */
+.card{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  margin-bottom:24px;
+  overflow:hidden;
+}
+.card-head{
+  padding:16px 22px;
+  border-bottom:1px solid var(--border);
+  background:var(--bg3);
+  display:flex;align-items:center;justify-content:space-between;
+  flex-wrap:wrap;gap:10px;
+}
+.card-head h3{font-size:15px;color:var(--text);}
+.card-body{padding:22px;}
+
+/* ── FORM CONTROLS ── */
+.form-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;}
+.form-grid.cols3{grid-template-columns:1fr 1fr 1fr;}
+.form-grid.cols1{grid-template-columns:1fr;}
+.field{display:flex;flex-direction:column;gap:6px;}
+.field label{
+  font-size:11.5px;font-weight:600;
+  color:var(--text2);text-transform:uppercase;letter-spacing:0.5px;
+}
+.field input,.field select,.field textarea{
+  padding:9px 13px;
+  border:1px solid var(--border);border-radius:4px;
+  background:var(--input-bg);color:var(--text);
+  font-size:13.5px;outline:none;
+  transition:border-color 0.15s;
+  width:100%;
+}
+.field input:focus,.field select:focus,.field textarea:focus{
+  border-color:var(--border2);
+}
+.field textarea{resize:vertical;min-height:80px;}
+
+.form-actions{
+  display:flex;align-items:center;gap:10px;
+  margin-top:20px;flex-wrap:wrap;
+}
+
+/* ── STAT CARDS ── */
+.stat-row{
+  display:grid;
+  grid-template-columns:repeat(auto-fill,minmax(160px,1fr));
+  gap:14px;margin-bottom:28px;
+}
+.stat-card{
+  background:var(--bg);
+  border:1px solid var(--border);
+  border-radius:8px;
+  padding:20px 18px;
+  text-align:center;
+}
+.stat-card .num{
+  font-family:'Libre Baskerville',serif;
+  font-size:26px;font-weight:700;
+  color:var(--text);
+}
+.stat-card .lbl{
+  font-size:11.5px;color:var(--text3);
+  text-transform:uppercase;letter-spacing:0.6px;margin-top:4px;
+}
+
+/* ── LIST ITEMS ── */
+.list-item{
+  display:flex;align-items:center;gap:12px;
+  padding:12px 16px;
+  background:var(--bg3);
+  border:1px solid var(--border);
+  border-radius:6px;
+  margin-bottom:10px;
+}
+.list-item img{width:44px;height:44px;object-fit:cover;border-radius:4px;border:1px solid var(--border);flex-shrink:0;}
+.list-item .thumb-placeholder{
+  width:44px;height:44px;border-radius:4px;background:var(--bg);
+  border:1px solid var(--border);display:flex;align-items:center;
+  justify-content:center;font-size:22px;flex-shrink:0;
+}
+.list-item .info{flex:1;min-width:0;}
+.list-item .info strong{display:block;font-size:13.5px;color:var(--text);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.list-item .info span{font-size:12px;color:var(--text3);}
+.list-item .actions{display:flex;gap:6px;flex-shrink:0;}
+
+.empty-state{
+  text-align:center;padding:44px 20px;
+  color:var(--text3);font-size:14px;
+}
+.empty-state .icon{font-size:44px;margin-bottom:10px;}
+
+/* ── BADGE / TAG ── */
+.badge{
+  display:inline-block;font-size:11px;
+  padding:2px 10px;border-radius:20px;
+  background:var(--bg3);color:var(--text3);
+  border:1px solid var(--border);
+  text-transform:capitalize;
+}
+.badge.green{background:#f0fff4;color:var(--green);border-color:#b7e4c7;}
+.badge.red{background:#fff0f0;color:var(--red);border-color:#f5c6c6;}
+.badge.blue{background:#f0f6ff;color:var(--blue);border-color:#b6d0f5;}
+.badge.orange{background:#fff8f0;color:var(--orange);border-color:#f5d6a0;}
+
+/* ── TOAST ── */
+#toast{
+  position:fixed;bottom:28px;right:28px;
+  background:var(--text);color:var(--bg);
+  padding:12px 22px;border-radius:6px;
+  font-size:13.5px;font-weight:500;
+  z-index:9999;
+  opacity:0;transform:translateY(12px);
+  transition:opacity 0.25s,transform 0.25s;
+  pointer-events:none;
+}
+#toast.show{opacity:1;transform:translateY(0);}
+
+/* ── NOTICE TABLE ── */
+.notice-table{width:100%;border-collapse:collapse;}
+.notice-table th,.notice-table td{
+  padding:11px 14px;text-align:left;font-size:13.5px;
+  border-bottom:1px solid var(--border);
+}
+.notice-table th{
+  background:var(--bg3);font-weight:600;
+  font-size:12px;text-transform:uppercase;letter-spacing:0.5px;
+  color:var(--text2);
+}
+.notice-table tbody tr:last-child td{border-bottom:none;}
+.notice-table tbody tr:hover td{background:var(--bg3);}
+
+/* ── TABS ── */
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:24px;}
+.tab-btn{
+  padding:10px 18px;background:none;border:none;
+  font-size:13.5px;color:var(--text3);cursor:pointer;
+  border-bottom:2px solid transparent;
+  transition:color 0.12s,border-color 0.12s;
+  margin-bottom:-1px;
+}
+.tab-btn.active{color:var(--text);border-bottom-color:var(--border2);font-weight:600;}
+.tab-btn:hover{color:var(--text);}
+.tab-pane{display:none;}
+.tab-pane.active{display:block;}
+
+/* ── PHOTO PREVIEW ── */
+.preview-box{
+  margin-top:14px;padding:14px;
+  background:var(--bg3);border:1px dashed var(--border2);
+  border-radius:6px;display:none;
+  align-items:center;gap:14px;
+}
+.preview-box.show{display:flex;}
+.preview-box img{max-height:90px;border-radius:5px;border:1px solid var(--border);}
+.preview-box .preview-info{font-size:13px;color:var(--text2);}
+
+/* ── UPLOAD LABEL ── */
+.upload-label{
+  display:inline-flex;align-items:center;gap:6px;
+  padding:7px 14px;
+  background:var(--bg);color:var(--text2);
+  border:1px solid var(--border);border-radius:4px;
+  font-size:12.5px;font-weight:500;cursor:pointer;
+  transition:border-color 0.15s,color 0.15s;
+}
+.upload-label:hover{border-color:var(--border2);color:var(--text);}
+
+/* ── DIVIDER ── */
+.divider{height:1px;background:var(--border);margin:20px 0;}
+
+/* ── PAGE HEADER ── */
+.page-header{margin-bottom:28px;}
+.page-header h2{font-size:24px;margin-bottom:4px;}
+.page-header p{color:var(--text3);font-size:14px;}
+
+/* ── RESPONSIVE ── */
+@media(max-width:768px){
+  .sidebar{display:none;}
+  .content{padding:20px;}
+  .form-grid{grid-template-columns:1fr;}
+  .form-grid.cols3{grid-template-columns:1fr;}
+}
+
+/* ── THEME TOGGLE ── */
+.btn-theme{
+  background:none;border:1px solid var(--border);
+  color:var(--text2);font-size:13px;padding:5px 12px;
+  border-radius:4px;transition:border-color 0.12s,color 0.12s;
+}
+.btn-theme:hover{border-color:var(--border2);color:var(--text);}
+
+/* ── NOTICE BOARD TYPE BADGE ── */
+.type-official{color:var(--blue);}
+.type-achievement{color:var(--green);}
+
+/* ── PIN CHANGE ── */
+.pin-display{
+  font-size:13px;color:var(--text3);
+  background:var(--bg3);border:1px solid var(--border);
+  padding:8px 14px;border-radius:4px;
+  font-family:monospace;letter-spacing:3px;
+}
+</style>
+<!-- Firebase bridge — load BEFORE the inline <script> -->
+<script src="api-db.js"></script>
+</head>
+<body>
+
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<!-- ══════════════ LOGIN SCREEN ══════════════ -->
+<div id="loginScreen">
+  <div class="login-card">
+    <div class="login-logo">🔐</div>
+    <h2>Admin Panel</h2>
+    <p>Adarsha Sanothimi Higher Secondary School</p>
+
+    <!-- Tab switcher -->
+    <div style="display:flex;gap:0;margin-bottom:22px;border:1px solid var(--border);border-radius:6px;overflow:hidden;">
+      <button id="tabPin" onclick="switchLoginTab('pin')"
+        style="flex:1;padding:9px;font-size:13px;background:var(--text);color:var(--bg);border:none;cursor:pointer;font-weight:600;">
+        🔑 PIN Login
+      </button>
+      <button id="tabQr" onclick="switchLoginTab('qr')"
+        style="flex:1;padding:9px;font-size:13px;background:none;color:var(--text2);border:none;cursor:pointer;">
+        📱 QR Login
+      </button>
+    </div>
+
+    <!-- PIN tab -->
+    <div id="loginTabPin">
+      <input type="password" id="pinInput" placeholder="Enter PIN" maxlength="8"
+             onkeydown="if(event.key==='Enter') doLogin()">
+      <button class="btn-login" onclick="doLogin()">Login</button>
+    </div>
+
+    <!-- QR tab -->
+    <div id="loginTabQr" style="display:none;text-align:center;">
+      <p style="font-size:13px;color:var(--text3);margin-bottom:14px;">
+        Scan this QR code from any device to log in.<br>Valid for <strong>5 minutes</strong>.
+      </p>
+      <div id="qrCodeBox" style="display:flex;justify-content:center;margin-bottom:12px;">
+        <canvas id="qrCanvas" width="180" height="180"></canvas>
+      </div>
+      <button class="btn-login" onclick="generateQR()" style="margin-bottom:8px;">
+        🔄 Generate New QR
+      </button>
+      <p id="qrStatus" style="font-size:12px;color:var(--text3);margin-top:8px;"></p>
+    </div>
+
+    <div class="login-err" id="loginErr"></div>
+    <div class="login-hint">🔒 Authorised access only</div>
+  </div>
+</div>
+
+<!-- ══════════════ ADMIN APP ══════════════ -->
+<div id="adminApp">
+
+  <!-- Top Bar -->
+  <div class="topbar">
+    <div class="topbar-brand">
+      🏫 Adarsha Sanothimi
+      <span>Admin Panel</span>
+    </div>
+    <div class="topbar-right">
+      <a href="index.html" class="btn-sm" target="_blank">🌐 View Site</a>
+      <button class="btn-theme" onclick="toggleTheme()">☀/☾</button>
+      <button class="btn-danger" onclick="doLogout()">Logout</button>
+    </div>
+  </div>
+
+  <div class="layout">
+
+    <!-- Sidebar -->
+    <div class="sidebar" id="sidebar">
+      <div class="sidebar-group">
+        <div class="sidebar-label">Overview</div>
+        <a onclick="showPanel('dashboard')" class="active" id="nav-dashboard">
+          <span class="icon">📊</span> Dashboard
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-label">Content</div>
+        <a onclick="showPanel('hero')" id="nav-hero">
+          <span class="icon">🏠</span> Hero & Stats
+        </a>
+        <a onclick="showPanel('notices')" id="nav-notices">
+          <span class="icon">📢</span> Notices
+        </a>
+        <a onclick="showPanel('ticker')" id="nav-ticker">
+          <span class="icon">📡</span> Ticker
+        </a>
+        <a onclick="showPanel('gallery')" id="nav-gallery">
+          <span class="icon">🖼️</span> Gallery
+        </a>
+        <a onclick="showPanel('teachers')" id="nav-teachers">
+          <span class="icon">👩‍🏫</span> Teachers
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-label">Academic</div>
+        <a onclick="showPanel('fees')" id="nav-fees">
+          <span class="icon">💰</span> Fee Structure
+        </a>
+        <a onclick="showPanel('calendar')" id="nav-calendar">
+          <span class="icon">📅</span> Calendar
+        </a>
+        <a onclick="showPanel('results')" id="nav-results">
+          <span class="icon">📋</span> Results
+        </a>
+      </div>
+      <div class="sidebar-group">
+        <div class="sidebar-label">Settings</div>
+        <a onclick="showPanel('settings')" id="nav-settings">
+          <span class="icon">⚙️</span> Site Settings
+        </a>
+        <a onclick="showPanel('security')" id="nav-security">
+          <span class="icon">🔑</span> Security
+        </a>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="content">
+
+      <!-- ── DASHBOARD ── -->
+      <div class="panel active" id="panel-dashboard">
+        <div class="page-header">
+          <h2>Dashboard</h2>
+          <p>Overview of site content managed by admin.</p>
+        </div>
+        <div class="stat-row" id="dashStats"></div>
+        <div class="card">
+          <div class="card-head"><h3>⚡ Quick Actions</h3></div>
+          <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap;">
+            <button class="btn-primary" onclick="showPanel('notices')">➕ Add Notice</button>
+            <button class="btn-primary" onclick="showPanel('gallery')">📷 Upload Photo</button>
+            <button class="btn-primary" onclick="showPanel('teachers')">👩‍🏫 Add Teacher</button>
+            <button class="btn-primary" onclick="showPanel('ticker')">📡 Edit Ticker</button>
+            <button class="btn-primary" onclick="showPanel('results')">📋 Add Result</button>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>📢 Recent Notices</h3></div>
+          <div class="card-body" id="recentNotices"></div>
+        </div>
+      </div>
+
+      <!-- ── HERO & STATS ── -->
+      <div class="panel" id="panel-hero">
+        <div class="page-header">
+          <h2>Hero & Stats</h2>
+          <p>Control homepage hero section and statistics counters.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>🏠 Hero Section</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label>School Name (English)</label>
+                <input type="text" id="h-name" placeholder="Adarsha Sanothimi">
+              </div>
+              <div class="field">
+                <label>Sub-title</label>
+                <input type="text" id="h-sub" placeholder="Higher Secondary School">
+              </div>
+              <div class="field">
+                <label>School Name (Nepali)</label>
+                <input type="text" id="h-np" placeholder="आदर्श सानोठिमी...">
+              </div>
+              <div class="field">
+                <label>Badge Text</label>
+                <input type="text" id="h-badge" placeholder="🇳🇵 Established 2034 BS...">
+              </div>
+            </div>
+            <div class="field" style="margin-top:14px;">
+              <label>Slogan / Motto</label>
+              <input type="text" id="h-slogan" placeholder='"ज्ञानं परमं भूषणम्"...'>
+            </div>
+            <div class="field" style="margin-top:14px;">
+              <label>Hero Description Paragraph</label>
+              <textarea id="h-desc" rows="3" placeholder="A leading government school..."></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="saveHero()">💾 Save Hero</button>
+              <button class="btn-sm" onclick="loadHeroFields()">↩ Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>📊 Statistics Counters</h3></div>
+          <div class="card-body">
+            <div class="form-grid cols3" id="statsFields"></div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="saveStats()">💾 Save Stats</button>
+              <button class="btn-sm" onclick="loadStatsFields()">↩ Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── NOTICES ── -->
+      <div class="panel" id="panel-notices">
+        <div class="page-header">
+          <h2>Notice Board</h2>
+          <p>Add, edit or remove official notices and achievements.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>➕ Add New Notice</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label>Notice Text</label>
+                <input type="text" id="n-text" placeholder="Notice content...">
+              </div>
+              <div class="field">
+                <label>Date (BS)</label>
+                <input type="text" id="n-date" placeholder="Baisakh 1, 2081 BS">
+              </div>
+              <div class="field">
+                <label>Type</label>
+                <select id="n-type">
+                  <option value="official">📢 Official Notice</option>
+                  <option value="achievement">🏆 Achievement / Event</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="addNotice()">➕ Add Notice</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>📢 Official Notices</h3>
+            <span class="badge blue" id="cnt-official">0</span>
+          </div>
+          <div class="card-body">
+            <table class="notice-table" id="tbl-official">
+              <thead><tr><th>Notice</th><th>Date</th><th>Action</th></tr></thead>
+              <tbody id="tbody-official"></tbody>
+            </table>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>🏆 Achievements & Events</h3>
+            <span class="badge green" id="cnt-achievement">0</span>
+          </div>
+          <div class="card-body">
+            <table class="notice-table" id="tbl-achievement">
+              <thead><tr><th>Notice</th><th>Date</th><th>Action</th></tr></thead>
+              <tbody id="tbody-achievement"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TICKER ── -->
+      <div class="panel" id="panel-ticker">
+        <div class="page-header">
+          <h2>Ticker / Announcement Bar</h2>
+          <p>Edit the scrolling ticker shown at the top of the public site.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>📡 Ticker Text (English)</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Ticker Text</label>
+              <textarea id="ticker-en" rows="4" placeholder="📢 Admission Open... | 📝 Notice 2..."></textarea>
+            </div>
+            <p style="font-size:12px;color:var(--text3);margin-top:8px;">Separate items with <code> | </code></p>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="saveTicker()">💾 Save Ticker</button>
+              <button class="btn-sm" onclick="loadTickerFields()">↩ Reset</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>📡 Ticker Text (Nepali)</h3></div>
+          <div class="card-body">
+            <div class="field">
+              <label>Ticker Text — Nepali</label>
+              <textarea id="ticker-np" rows="4" placeholder="📢 भर्ना खुला... | 📝 सूचना..."></textarea>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="saveTicker()">💾 Save Ticker</button>
+              <button class="btn-sm" onclick="loadTickerFields()">↩ Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── GALLERY ── -->
+      <div class="panel" id="panel-gallery">
+        <div class="page-header">
+          <h2>Photo Gallery</h2>
+          <p>Upload and manage photos shown in the public gallery section.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>📷 Upload Photo</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label>Caption / Title</label>
+                <input type="text" id="g-caption" placeholder="Photo caption...">
+              </div>
+              <div class="field">
+                <label>Category</label>
+                <select id="g-cat">
+                  <option value="events">Events</option>
+                  <option value="campus">Campus</option>
+                  <option value="sports">Sports</option>
+                  <option value="academics">Academics</option>
+                </select>
+              </div>
+            </div>
+            <div style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+              <label class="upload-label">
+                🖼️ Choose Photo
+                <input type="file" id="g-file" accept="image/*" style="display:none" onchange="previewGallery(this)">
+              </label>
+              <button class="btn-primary" onclick="addGalleryPhoto()">➕ Add to Gallery</button>
+            </div>
+            <div class="preview-box" id="g-preview">
+              <img id="g-preview-img" src="" alt="">
+              <div class="preview-info" id="g-preview-info"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>🗂️ Manage Gallery</h3>
+            <span class="badge blue" id="cnt-gallery">0 photos</span>
+          </div>
+          <div class="card-body">
+            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-bottom:16px;" id="galleryFilterBtns">
+              <button class="btn-sm" onclick="filterGalleryAdmin('all',this)" style="border-color:var(--border2);color:var(--text);">All</button>
+              <button class="btn-sm" onclick="filterGalleryAdmin('events',this)">Events</button>
+              <button class="btn-sm" onclick="filterGalleryAdmin('campus',this)">Campus</button>
+              <button class="btn-sm" onclick="filterGalleryAdmin('sports',this)">Sports</button>
+              <button class="btn-sm" onclick="filterGalleryAdmin('academics',this)">Academics</button>
+            </div>
+            <div id="galleryAdminList"></div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── TEACHERS ── -->
+      <div class="panel" id="panel-teachers">
+        <div class="page-header">
+          <h2>Teacher Profiles</h2>
+          <p>Add and manage teacher cards shown on the public site.</p>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>👩‍🏫 Add Teacher</h3></div>
+          <div class="card-body">
+            <div class="form-grid cols3">
+              <div class="field">
+                <label>Full Name</label>
+                <input type="text" id="t-name" placeholder="Ram Prasad Sharma">
+              </div>
+              <div class="field">
+                <label>Subject / Department</label>
+                <input type="text" id="t-subject" placeholder="Mathematics">
+              </div>
+              <div class="field">
+                <label>Qualification</label>
+                <input type="text" id="t-qual" placeholder="M.Sc., B.Ed.">
+              </div>
+            </div>
+            <div style="margin-top:14px;display:flex;gap:12px;align-items:center;flex-wrap:wrap;">
+              <label class="upload-label">
+                📸 Photo (Optional)
+                <input type="file" id="t-file" accept="image/*" style="display:none" onchange="previewTeacher(this)">
+              </label>
+              <button class="btn-primary" onclick="addTeacher()">➕ Add Teacher</button>
+            </div>
+            <div class="preview-box" id="t-preview">
+              <img id="t-preview-img" src="" alt="" style="height:70px;width:70px;object-fit:cover;border-radius:50%;">
+              <div class="preview-info" id="t-preview-info"></div>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head">
+            <h3>🗂️ Manage Teachers</h3>
+            <span class="badge blue" id="cnt-teachers">0 profiles</span>
+          </div>
+          <div class="card-body" id="teacherAdminList"></div>
+        </div>
+      </div>
+
+      <!-- ── FEES ── -->
+      <div class="panel" id="panel-fees">
+        <div class="page-header">
+          <h2>Fee Structure</h2>
+          <p>Edit the fee table displayed on the public site.</p>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3>💰 Fee Table Rows</h3>
+            <button class="btn-primary" onclick="addFeeRow()">➕ Add Row</button>
+          </div>
+          <div class="card-body">
+            <div style="overflow-x:auto;">
+              <table class="notice-table" id="feeTable">
+                <thead>
+                  <tr>
+                    <th>Level</th>
+                    <th>Admission Fee</th>
+                    <th>Monthly Fee</th>
+                    <th>Exam Fee</th>
+                    <th>Remarks</th>
+                    <th>Action</th>
+                  </tr>
+                </thead>
+                <tbody id="feeBody"></tbody>
+              </table>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="saveFees()">💾 Save Fees</button>
+              <button class="btn-sm" onclick="loadFeeFields()">↩ Reset</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── CALENDAR ── -->
+      <div class="panel" id="panel-calendar">
+        <div class="page-header">
+          <h2>Calendar & Events</h2>
+          <p>Manage the academic calendar shown on the public site.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>➕ Add Event</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label>Date (BS)</label>
+                <input type="text" id="cal-date" placeholder="Baisakh 1, 2081">
+              </div>
+              <div class="field">
+                <label>Event Name</label>
+                <input type="text" id="cal-event" placeholder="Annual Sports Day">
+              </div>
+              <div class="field">
+                <label>Target Group</label>
+                <input type="text" id="cal-target" placeholder="All Students">
+              </div>
+              <div class="field">
+                <label>Status</label>
+                <select id="cal-status">
+                  <option value="✅ Completed">✅ Completed</option>
+                  <option value="📅 Upcoming">📅 Upcoming</option>
+                  <option value="📅 Scheduled">📅 Scheduled</option>
+                  <option value="❌ Cancelled">❌ Cancelled</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="addCalEvent()">➕ Add Event</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3>📅 Events List</h3>
+            <span class="badge blue" id="cnt-cal">0 events</span>
+          </div>
+          <div class="card-body" style="overflow-x:auto;">
+            <table class="notice-table">
+              <thead><tr><th>Date</th><th>Event</th><th>Group</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="calBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── RESULTS ── -->
+      <div class="panel" id="panel-results">
+        <div class="page-header">
+          <h2>Result Portal</h2>
+          <p>Add student results. Students look up their symbol number on the public site.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>➕ Add Student Result</h3></div>
+          <div class="card-body">
+            <div class="form-grid cols3">
+              <div class="field">
+                <label>Symbol / Student ID</label>
+                <input type="text" id="r-id" placeholder="2081-S-001">
+              </div>
+              <div class="field">
+                <label>Student Name</label>
+                <input type="text" id="r-name" placeholder="Full Name">
+              </div>
+              <div class="field">
+                <label>Class / Grade</label>
+                <input type="text" id="r-grade" placeholder="Class 10 / Grade 11">
+              </div>
+              <div class="field">
+                <label>GPA</label>
+                <input type="text" id="r-gpa" placeholder="3.75">
+              </div>
+              <div class="field">
+                <label>Grade / Division</label>
+                <input type="text" id="r-div" placeholder="A+">
+              </div>
+              <div class="field">
+                <label>Status</label>
+                <select id="r-status">
+                  <option value="Pass">✅ Pass</option>
+                  <option value="Fail">❌ Fail</option>
+                  <option value="Absent">⬜ Absent</option>
+                </select>
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="addResult()">➕ Add Result</button>
+            </div>
+          </div>
+        </div>
+        <div class="card">
+          <div class="card-head">
+            <h3>📋 Student Results</h3>
+            <span class="badge blue" id="cnt-results">0 records</span>
+          </div>
+          <div class="card-body" style="overflow-x:auto;">
+            <table class="notice-table">
+              <thead><tr><th>Symbol/ID</th><th>Name</th><th>Class</th><th>GPA</th><th>Grade</th><th>Status</th><th>Action</th></tr></thead>
+              <tbody id="resultsBody"></tbody>
+            </table>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SETTINGS ── -->
+      <div class="panel" id="panel-settings">
+        <div class="page-header">
+          <h2>Site Settings</h2>
+          <p>Update school contact information and site-wide settings.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>🏫 School Info</h3></div>
+          <div class="card-body">
+            <div class="form-grid">
+              <div class="field">
+                <label>School Full Name</label>
+                <input type="text" id="s-fullname" placeholder="Adarsha Sanothimi Higher Secondary School">
+              </div>
+              <div class="field">
+                <label>Established (BS)</label>
+                <input type="text" id="s-est" placeholder="2034 BS">
+              </div>
+              <div class="field">
+                <label>Address</label>
+                <input type="text" id="s-addr" placeholder="Sanothimi, Bhaktapur-16">
+              </div>
+              <div class="field">
+                <label>Phone</label>
+                <input type="text" id="s-phone" placeholder="01-6614322 / 01-6614323">
+              </div>
+              <div class="field">
+                <label>Email</label>
+                <input type="text" id="s-email" placeholder="info@adarshasanothimi.edu.np">
+              </div>
+              <div class="field">
+                <label>Website</label>
+                <input type="text" id="s-web" placeholder="www.adarshasanothimi.edu.np">
+              </div>
+            </div>
+            <div class="field" style="margin-top:14px;">
+              <label>Footer Copyright Text</label>
+              <input type="text" id="s-copy" placeholder="© 2081 BS · Adarsha Sanothimi...">
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="saveSettings()">💾 Save Settings</button>
+              <button class="btn-sm" onclick="loadSettingsFields()">↩ Reset</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card">
+          <div class="card-head"><h3>🧹 Data Management</h3></div>
+          <div class="card-body">
+            <p style="color:var(--text3);font-size:13.5px;margin-bottom:18px;">
+              Permanently delete sections of stored data. These actions cannot be undone.
+            </p>
+            <div style="display:flex;gap:10px;flex-wrap:wrap;">
+              <button class="btn-danger" onclick="clearData('school_gallery','gallery photos')">🗑 Clear Gallery</button>
+              <button class="btn-danger" onclick="clearData('school_teachers','teacher profiles')">🗑 Clear Teachers</button>
+              <button class="btn-danger" onclick="clearData('school_notices','notices')">🗑 Clear Notices</button>
+              <button class="btn-danger" onclick="clearData('school_results','results')">🗑 Clear Results</button>
+              <button class="btn-danger" onclick="clearData('school_calendar','calendar events')">🗑 Clear Calendar</button>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ── SECURITY ── -->
+      <div class="panel" id="panel-security">
+        <div class="page-header">
+          <h2>Security</h2>
+          <p>Change the admin login PIN.</p>
+        </div>
+        <div class="card">
+          <div class="card-head"><h3>🔑 Change Admin PIN</h3></div>
+          <div class="card-body">
+            <div style="margin-bottom:18px;">
+              <p style="font-size:13.5px;color:var(--text2);margin-bottom:8px;">Current PIN:</p>
+              <div class="pin-display" id="currentPinDisplay">••••</div>
+            </div>
+            <div class="form-grid" style="max-width:420px;">
+              <div class="field">
+                <label>Current PIN</label>
+                <input type="password" id="sec-current" placeholder="Current PIN" maxlength="8">
+              </div>
+              <div class="field">
+                <label>New PIN</label>
+                <input type="password" id="sec-new" placeholder="New PIN (4–8 digits)" maxlength="8">
+              </div>
+              <div class="field">
+                <label>Confirm New PIN</label>
+                <input type="password" id="sec-confirm" placeholder="Repeat new PIN" maxlength="8">
+              </div>
+            </div>
+            <div class="form-actions">
+              <button class="btn-primary" onclick="changePin()">🔒 Change PIN</button>
+            </div>
+            <div id="sec-msg" style="margin-top:10px;font-size:13px;"></div>
+          </div>
+        </div>
+      </div>
+
+    </div><!-- /content -->
+  </div><!-- /layout -->
+</div><!-- /adminApp -->
+
+<div id="toast"></div>
+
+<script>
+// ════════════════════════════════════════════════
+// STORAGE HELPERS
+// ════════════════════════════════════════════════
+// Use DB (MySQL API) with localStorage fallback from api-db.js
+const load = (key, def) => {
+  try {
+    const raw = window.DB ? window.DB.getItem(key) : localStorage.getItem(key);
+    return raw !== null ? JSON.parse(raw) : def;
+  } catch(e) { return def; }
+};
+const save = async (key, val) => {
+  if (window.DB) await window.DB.setItem(key, JSON.stringify(val));
+  else localStorage.setItem(key, JSON.stringify(val));
+};
+
+// ════════════════════════════════════════════════
+// DEFAULT DATA
+// ════════════════════════════════════════════════
+const DEFAULT_PIN = '2081';
+
+const DEFAULT_HERO = {
+  name:'Adarsha Sanothimi', sub:'Higher Secondary School',
+  np:'आदर्श सानोठिमी माध्यमिक विद्यालय',
+  badge:'🇳🇵 Established 2034 BS · Sanothimi, Bhaktapur',
+  slogan:'"ज्ञानं परमं भूषणम्" — Knowledge is the Ultimate Ornament',
+  desc:'A leading government school in Sanothimi, Bhaktapur committed to quality education from ECD to Grade 12 with Science, Management and Humanities streams.'
+};
+
+const DEFAULT_STATS = [
+  {val:'1,800+', lbl:'Students Enrolled'},
+  {val:'95.2%',  lbl:'Pass Rate'},
+  {val:'60+',    lbl:'Teachers'},
+  {val:'Grade 1–12', lbl:'All Levels'},
+  {val:'Science & Mgmt', lbl:'+2 Streams'},
+  {val:'40+',    lbl:'Years of Service'},
+];
+
+const DEFAULT_TICKER_EN = '📢 Admission Open for 2081 BS! | 📝 Grade 11 Entrance Form available at school office | 🏆 SEE Result 2080: Outstanding performance by our students | 📅 First Terminal Exam: Ashadh 5–15 | 🎓 NEB Affiliation renewed successfully';
+const DEFAULT_TICKER_NP = '📢 २०८१ BS को भर्ना खुला! | 📝 कक्षा ११ को प्रवेश फारम विद्यालय कार्यालयमा उपलब्ध | 🏆 SEE नतिजा २०८०: हाम्रा विद्यार्थीहरूको उत्कृष्ट प्रदर्शन | 📅 प्रथम टर्मिनल परीक्षा: असार ५–१५';
+
+const DEFAULT_NOTICES = [
+  {text:'Admission open for academic year 2081–82 BS. All grades available.', date:'Baisakh 1, 2081 BS', type:'official'},
+  {text:'Grade 11 entrance examination scheduled for Jestha 15, 2081.', date:'Baisakh 20, 2081 BS', type:'official'},
+  {text:'First terminal examination: Ashadh 5 to 15, 2081 for all classes.', date:'Jestha 5, 2081 BS', type:'official'},
+  {text:'Parent-Teacher Meeting scheduled for Jestha 28, 2081 from 10 AM.', date:'Jestha 10, 2081 BS', type:'official'},
+  {text:'SEE 2080: 98% of our students passed with GPA above 2.4.', date:'Chaitra 28, 2080 BS', type:'achievement'},
+  {text:'Annual Sports Day successfully completed. Red House wins trophy.', date:'Falgun 15, 2080 BS', type:'achievement'},
+  {text:'NEB Affiliation renewed for 2081–2083. All +2 streams confirmed.', date:'Magh 10, 2080 BS', type:'achievement'},
+];
+
+const DEFAULT_FEES = [
+  {level:'ECD / Nursery', adm:'Rs. 1,500', monthly:'Rs. 600', exam:'Rs. 500', remarks:'Books extra'},
+  {level:'Class 1–5', adm:'Rs. 2,000', monthly:'Rs. 700', exam:'Rs. 600', remarks:'Uniform required'},
+  {level:'Class 6–8', adm:'Rs. 2,500', monthly:'Rs. 800', exam:'Rs. 700', remarks:'—'},
+  {level:'Class 9–10 (SEE)', adm:'Rs. 3,000', monthly:'Rs. 1,000', exam:'Rs. 1,200', remarks:'SEE registration extra'},
+  {level:'+2 Science', adm:'Rs. 5,000', monthly:'Rs. 1,500', exam:'Rs. 2,000', remarks:'Lab fee extra'},
+  {level:'+2 Management', adm:'Rs. 4,000', monthly:'Rs. 1,200', exam:'Rs. 1,800', remarks:'—'},
+  {level:'+2 Humanities', adm:'Rs. 3,500', monthly:'Rs. 1,000', exam:'Rs. 1,500', remarks:'—'},
+];
+
+const DEFAULT_CALENDAR = [
+  {date:'Baisakh 1, 2081', event:'New Academic Session Begins', target:'All Classes', status:'✅ Completed'},
+  {date:'Jestha 15, 2081', event:'Grade 11 Entrance Examination', target:'New +2 Students', status:'📅 Upcoming'},
+  {date:'Ashadh 5–15, 2081', event:'First Terminal Examinations', target:'All Classes', status:'📅 Scheduled'},
+  {date:'Shrawan 28, 2081', event:'Parent-Teacher Meeting', target:'All Parents', status:'📅 Scheduled'},
+  {date:'Ashwin 1, 2081', event:'Second Semester Begins', target:'All Classes', status:'📅 Scheduled'},
+  {date:'Poush 15–25, 2081', event:'Second Terminal Examination', target:'All Classes', status:'📅 Scheduled'},
+  {date:'Falgun 20, 2081', event:'Annual Sports Day', target:'All Students', status:'📅 Scheduled'},
+  {date:'Chaitra 5–20, 2081', event:'Final Examinations', target:'Class 1–12', status:'📅 Scheduled'},
+];
+
+const DEFAULT_SETTINGS = {
+  fullname:'Adarsha Sanothimi Higher Secondary School',
+  est:'2034 BS',
+  addr:'Sanothimi, Bhaktapur-16, Bagmati Province, Nepal',
+  phone:'01-6614322 / 01-6614323',
+  email:'info@adarshasanothimi.edu.np',
+  web:'www.adarshasanothimi.edu.np',
+  copy:'© 2081 BS · Adarsha Sanothimi Higher Secondary School · Sanothimi, Bhaktapur · All Rights Reserved'
+};
+
+// ════════════════════════════════════════════════
+// STATE
+// ════════════════════════════════════════════════
+let ADMIN_PIN      = load('admin_pin', DEFAULT_PIN);
+let heroData       = load('school_hero', DEFAULT_HERO);
+let statsData      = load('school_stats', DEFAULT_STATS);
+let tickerEn       = load('school_ticker_en', DEFAULT_TICKER_EN);
+let tickerNp       = load('school_ticker_np', DEFAULT_TICKER_NP);
+let noticesData    = load('school_notices', DEFAULT_NOTICES);
+let galleryData    = load('school_gallery', []);
+let teachersData   = load('school_teachers', []);
+let feesData       = load('school_fees', DEFAULT_FEES);
+let calendarData   = load('school_calendar', DEFAULT_CALENDAR);
+let resultsData    = load('school_results', []);
+let settingsData   = load('school_settings', DEFAULT_SETTINGS);
+
+let pendingGalleryImg = null;
+let pendingTeacherImg = null;
+let galleryFilter     = 'all';
+
+// ════════════════════════════════════════════════
+// LOGIN / LOGOUT
+// ════════════════════════════════════════════════
+async function doLogin() {
+  const pin = document.getElementById('pinInput').value.trim();
+  const ok = window.DB_PIN ? await window.DB_PIN.verify(pin) : (pin === load('admin_pin', DEFAULT_PIN));
+  if (ok) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    document.getElementById('loginErr').textContent = '';
+    initApp();
+  } else {
+    document.getElementById('loginErr').textContent = '❌ Incorrect PIN. Please try again.';
+    document.getElementById('pinInput').value = '';
+  }
+}
+
+function doLogout() {
+  if (!confirm('Logout from admin panel?')) return;
+  document.getElementById('adminApp').style.display = 'none';
+  document.getElementById('loginScreen').style.display = 'flex';
+  document.getElementById('pinInput').value = '';
+  document.getElementById('loginErr').textContent = '';
+}
+
+document.getElementById('pinInput').addEventListener('keydown', e => {
+  if (e.key === 'Enter') doLogin();
+});
+
+// ════════════════════════════════════════════════
+// THEME
+// ════════════════════════════════════════════════
+function toggleTheme() {
+  const r = document.documentElement;
+  r.setAttribute('data-theme', r.getAttribute('data-theme') === 'dark' ? 'light' : 'dark');
+}
+
+// ════════════════════════════════════════════════
+// PANEL NAV
+// ════════════════════════════════════════════════
+function showPanel(id) {
+  document.querySelectorAll('.panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.sidebar a').forEach(a => a.classList.remove('active'));
+  document.getElementById('panel-' + id).classList.add('active');
+  const nav = document.getElementById('nav-' + id);
+  if (nav) nav.classList.add('active');
+  // Refresh relevant data
+  if (id === 'dashboard') renderDashboard();
+  if (id === 'notices') renderNotices();
+  if (id === 'gallery') renderGalleryAdmin();
+  if (id === 'teachers') renderTeachers();
+  if (id === 'fees') loadFeeFields();
+  if (id === 'calendar') renderCalendar();
+  if (id === 'results') renderResults();
+  if (id === 'hero') { loadHeroFields(); loadStatsFields(); }
+  if (id === 'ticker') loadTickerFields();
+  if (id === 'settings') loadSettingsFields();
+  if (id === 'security') document.getElementById('currentPinDisplay').textContent = ADMIN_PIN;
+}
+
+// ════════════════════════════════════════════════
+// TOAST
+// ════════════════════════════════════════════════
+function toast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 2400);
+}
+
+// ════════════════════════════════════════════════
+// DASHBOARD
+// ════════════════════════════════════════════════
+function renderDashboard() {
+  // Stats cards
+  const counts = [
+    {num: noticesData.length, lbl: 'Notices'},
+    {num: galleryData.length, lbl: 'Gallery Photos'},
+    {num: teachersData.length, lbl: 'Teachers'},
+    {num: resultsData.length, lbl: 'Results'},
+    {num: calendarData.length, lbl: 'Events'},
+  ];
+  document.getElementById('dashStats').innerHTML = counts.map(c => `
+    <div class="stat-card">
+      <div class="num">${c.num}</div>
+      <div class="lbl">${c.lbl}</div>
+    </div>`).join('');
+
+  // Recent notices
+  const recent = noticesData.slice(0, 5);
+  document.getElementById('recentNotices').innerHTML = recent.length
+    ? recent.map(n => `
+        <div class="list-item">
+          <div class="thumb-placeholder">${n.type === 'official' ? '📢' : '🏆'}</div>
+          <div class="info">
+            <strong>${n.text}</strong>
+            <span>${n.date} · <span class="badge ${n.type === 'official' ? 'blue' : 'green'}">${n.type}</span></span>
+          </div>
+        </div>`).join('')
+    : '<div class="empty-state"><div class="icon">📭</div><p>No notices added yet.</p></div>';
+}
+
+// ════════════════════════════════════════════════
+// HERO & STATS
+// ════════════════════════════════════════════════
+function loadHeroFields() {
+  heroData = load('school_hero', DEFAULT_HERO);
+  setVal('h-name', heroData.name);
+  setVal('h-sub', heroData.sub);
+  setVal('h-np', heroData.np);
+  setVal('h-badge', heroData.badge);
+  setVal('h-slogan', heroData.slogan);
+  setVal('h-desc', heroData.desc);
+}
+
+function saveHero() {
+  heroData = {
+    name: getVal('h-name'), sub: getVal('h-sub'),
+    np: getVal('h-np'), badge: getVal('h-badge'),
+    slogan: getVal('h-slogan'), desc: getVal('h-desc')
+  };
+  save('school_hero', heroData);
+  toast('✅ Hero section saved!');
+}
+
+function loadStatsFields() {
+  statsData = load('school_stats', DEFAULT_STATS);
+  document.getElementById('statsFields').innerHTML = statsData.map((s, i) => `
+    <div class="field">
+      <label>Stat ${i+1} Value</label>
+      <input type="text" id="sv-${i}" value="${s.val}">
+    </div>
+    <div class="field">
+      <label>Stat ${i+1} Label</label>
+      <input type="text" id="sl-${i}" value="${s.lbl}">
+    </div>
+  `).join('');
+}
+
+function saveStats() {
+  statsData = statsData.map((_, i) => ({
+    val: getVal('sv-' + i), lbl: getVal('sl-' + i)
+  }));
+  save('school_stats', statsData);
+  toast('✅ Stats saved!');
+}
+
+// ════════════════════════════════════════════════
+// NOTICES
+// ════════════════════════════════════════════════
+function addNotice() {
+  const text = getVal('n-text').trim();
+  const date = getVal('n-date').trim();
+  const type = getVal('n-type');
+  if (!text || !date) { toast('⚠️ Fill in notice text and date.'); return; }
+  noticesData.unshift({ text, date, type });
+  save('school_notices', noticesData);
+  setVal('n-text',''); setVal('n-date','');
+  renderNotices();
+  toast('✅ Notice added!');
+}
+
+function deleteNotice(i) {
+  if (!confirm('Delete this notice?')) return;
+  noticesData.splice(i, 1);
+  save('school_notices', noticesData);
+  renderNotices();
+  toast('🗑 Notice removed.');
+}
+
+function renderNotices() {
+  noticesData = load('school_notices', DEFAULT_NOTICES);
+  const official   = noticesData.filter(n => n.type === 'official');
+  const achievement = noticesData.filter(n => n.type === 'achievement');
+
+  document.getElementById('cnt-official').textContent = official.length;
+  document.getElementById('cnt-achievement').textContent = achievement.length;
+
+  renderNoticeTable('tbody-official', official, 'official');
+  renderNoticeTable('tbody-achievement', achievement, 'achievement');
+}
+
+function renderNoticeTable(tbodyId, items, type) {
+  const tbody = document.getElementById(tbodyId);
+  if (!items.length) {
+    tbody.innerHTML = `<tr><td colspan="3" style="text-align:center;color:var(--text3);padding:20px;">No ${type} notices.</td></tr>`;
+    return;
+  }
+  tbody.innerHTML = items.map((n, i) => {
+    const realIdx = noticesData.indexOf(n);
+    return `<tr>
+      <td>${n.text}</td>
+      <td><span class="badge">${n.date}</span></td>
+      <td><button class="btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteNotice(${realIdx})">🗑 Delete</button></td>
+    </tr>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// TICKER
+// ════════════════════════════════════════════════
+function loadTickerFields() {
+  tickerEn = load('school_ticker_en', DEFAULT_TICKER_EN);
+  tickerNp = load('school_ticker_np', DEFAULT_TICKER_NP);
+  setVal('ticker-en', typeof tickerEn === 'string' ? tickerEn : DEFAULT_TICKER_EN);
+  setVal('ticker-np', typeof tickerNp === 'string' ? tickerNp : DEFAULT_TICKER_NP);
+}
+
+function saveTicker() {
+  tickerEn = getVal('ticker-en');
+  tickerNp = getVal('ticker-np');
+  save('school_ticker_en', tickerEn);
+  save('school_ticker_np', tickerNp);
+  toast('✅ Ticker saved!');
+}
+
+// ════════════════════════════════════════════════
+// GALLERY
+// ════════════════════════════════════════════════
+function previewGallery(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    pendingGalleryImg = e.target.result;
+    const prev = document.getElementById('g-preview');
+    document.getElementById('g-preview-img').src = pendingGalleryImg;
+    document.getElementById('g-preview-info').textContent = input.files[0].name;
+    prev.classList.add('show');
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function addGalleryPhoto() {
+  const caption  = getVal('g-caption').trim();
+  const category = getVal('g-cat');
+  if (!caption) { toast('⚠️ Enter a caption.'); return; }
+  if (!pendingGalleryImg) { toast('⚠️ Choose a photo.'); return; }
+  galleryData.unshift({ caption, category, data: pendingGalleryImg });
+  save('school_gallery', galleryData);
+  setVal('g-caption','');
+  document.getElementById('g-file').value = '';
+  document.getElementById('g-preview').classList.remove('show');
+  pendingGalleryImg = null;
+  renderGalleryAdmin();
+  toast('✅ Photo added!');
+}
+
+function deleteGalleryPhoto(i) {
+  if (!confirm('Delete this photo?')) return;
+  galleryData.splice(i, 1);
+  save('school_gallery', galleryData);
+  renderGalleryAdmin();
+  toast('🗑 Photo removed.');
+}
+
+function filterGalleryAdmin(cat, btn) {
+  galleryFilter = cat;
+  document.querySelectorAll('#galleryFilterBtns .btn-sm').forEach(b => {
+    b.style.borderColor = ''; b.style.color = '';
+  });
+  btn.style.borderColor = 'var(--border2)'; btn.style.color = 'var(--text)';
+  renderGalleryAdmin();
+}
+
+function renderGalleryAdmin() {
+  galleryData = load('school_gallery', []);
+  const filtered = galleryFilter === 'all' ? galleryData : galleryData.filter(p => p.category === galleryFilter);
+  document.getElementById('cnt-gallery').textContent = galleryData.length + ' photos';
+  const list = document.getElementById('galleryAdminList');
+  if (!filtered.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">🖼️</div><p>No photos in this category.</p></div>';
+    return;
+  }
+  list.innerHTML = filtered.map((p) => {
+    const realIdx = galleryData.indexOf(p);
+    return `<div class="list-item">
+      <img src="${p.data}" alt="${p.caption}">
+      <div class="info">
+        <strong>${p.caption}</strong>
+        <span><span class="badge">${p.category}</span></span>
+      </div>
+      <div class="actions">
+        <button class="btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteGalleryPhoto(${realIdx})">🗑 Delete</button>
+      </div>
+    </div>`;
+  }).join('');
+}
+
+// ════════════════════════════════════════════════
+// TEACHERS
+// ════════════════════════════════════════════════
+function previewTeacher(input) {
+  if (!input.files[0]) return;
+  const reader = new FileReader();
+  reader.onload = e => {
+    pendingTeacherImg = e.target.result;
+    document.getElementById('t-preview-img').src = pendingTeacherImg;
+    document.getElementById('t-preview-info').textContent = input.files[0].name;
+    document.getElementById('t-preview').classList.add('show');
+  };
+  reader.readAsDataURL(input.files[0]);
+}
+
+function addTeacher() {
+  const name    = getVal('t-name').trim();
+  const subject = getVal('t-subject').trim();
+  const qual    = getVal('t-qual').trim();
+  if (!name || !subject || !qual) { toast('⚠️ Fill in name, subject and qualification.'); return; }
+  teachersData.push({ name, subject, qual, photo: pendingTeacherImg });
+  save('school_teachers', teachersData);
+  setVal('t-name',''); setVal('t-subject',''); setVal('t-qual','');
+  document.getElementById('t-file').value = '';
+  document.getElementById('t-preview').classList.remove('show');
+  pendingTeacherImg = null;
+  renderTeachers();
+  toast('✅ Teacher added!');
+}
+
+function deleteTeacher(i) {
+  if (!confirm('Remove this teacher profile?')) return;
+  teachersData.splice(i, 1);
+  save('school_teachers', teachersData);
+  renderTeachers();
+  toast('🗑 Teacher removed.');
+}
+
+function renderTeachers() {
+  teachersData = load('school_teachers', []);
+  document.getElementById('cnt-teachers').textContent = teachersData.length + ' profiles';
+  const list = document.getElementById('teacherAdminList');
+  if (!teachersData.length) {
+    list.innerHTML = '<div class="empty-state"><div class="icon">👩‍🏫</div><p>No teachers added yet.</p></div>';
+    return;
+  }
+  list.innerHTML = teachersData.map((t, i) => `
+    <div class="list-item">
+      ${t.photo
+        ? `<img src="${t.photo}" alt="${t.name}" style="border-radius:50%;">`
+        : `<div class="thumb-placeholder" style="border-radius:50%;">👤</div>`}
+      <div class="info">
+        <strong>${t.name}</strong>
+        <span>${t.subject} · ${t.qual}</span>
+      </div>
+      <div class="actions">
+        <button class="btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteTeacher(${i})">🗑 Remove</button>
+      </div>
+    </div>`).join('');
+}
+
+// ════════════════════════════════════════════════
+// FEES
+// ════════════════════════════════════════════════
+function loadFeeFields() {
+  feesData = load('school_fees', DEFAULT_FEES);
+  renderFeeRows();
+}
+
+function renderFeeRows() {
+  document.getElementById('feeBody').innerHTML = feesData.map((f, i) => `
+    <tr>
+      <td><input type="text" value="${f.level}" id="fee-level-${i}" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px;"></td>
+      <td><input type="text" value="${f.adm}" id="fee-adm-${i}" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px;"></td>
+      <td><input type="text" value="${f.monthly}" id="fee-mon-${i}" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px;"></td>
+      <td><input type="text" value="${f.exam}" id="fee-exam-${i}" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px;"></td>
+      <td><input type="text" value="${f.remarks}" id="fee-rem-${i}" style="width:100%;padding:5px 8px;border:1px solid var(--border);border-radius:4px;background:var(--input-bg);color:var(--text);font-size:13px;"></td>
+      <td><button class="btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteFeeRow(${i})">🗑</button></td>
+    </tr>`).join('');
+}
+
+function addFeeRow() {
+  feesData.push({level:'', adm:'', monthly:'', exam:'', remarks:'—'});
+  renderFeeRows();
+}
+
+function deleteFeeRow(i) {
+  feesData.splice(i, 1);
+  renderFeeRows();
+}
+
+function saveFees() {
+  feesData = feesData.map((_, i) => ({
+    level:   document.getElementById('fee-level-' + i)?.value || '',
+    adm:     document.getElementById('fee-adm-' + i)?.value || '',
+    monthly: document.getElementById('fee-mon-' + i)?.value || '',
+    exam:    document.getElementById('fee-exam-' + i)?.value || '',
+    remarks: document.getElementById('fee-rem-' + i)?.value || '',
+  }));
+  save('school_fees', feesData);
+  toast('✅ Fee structure saved!');
+}
+
+// ════════════════════════════════════════════════
+// CALENDAR
+// ════════════════════════════════════════════════
+function addCalEvent() {
+  const date   = getVal('cal-date').trim();
+  const event  = getVal('cal-event').trim();
+  const target = getVal('cal-target').trim();
+  const status = getVal('cal-status');
+  if (!date || !event) { toast('⚠️ Fill in date and event.'); return; }
+  calendarData.push({ date, event, target, status });
+  save('school_calendar', calendarData);
+  setVal('cal-date',''); setVal('cal-event',''); setVal('cal-target','');
+  renderCalendar();
+  toast('✅ Event added!');
+}
+
+function deleteCalEvent(i) {
+  if (!confirm('Delete this event?')) return;
+  calendarData.splice(i, 1);
+  save('school_calendar', calendarData);
+  renderCalendar();
+  toast('🗑 Event removed.');
+}
+
+function renderCalendar() {
+  calendarData = load('school_calendar', DEFAULT_CALENDAR);
+  document.getElementById('cnt-cal').textContent = calendarData.length + ' events';
+  const tbody = document.getElementById('calBody');
+  tbody.innerHTML = calendarData.length
+    ? calendarData.map((e, i) => `
+        <tr>
+          <td>${e.date}</td>
+          <td>${e.event}</td>
+          <td>${e.target}</td>
+          <td>${e.status}</td>
+          <td><button class="btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteCalEvent(${i})">🗑</button></td>
+        </tr>`).join('')
+    : `<tr><td colspan="5" style="text-align:center;color:var(--text3);padding:20px;">No events added.</td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+// RESULTS
+// ════════════════════════════════════════════════
+function addResult() {
+  const id     = getVal('r-id').trim().toUpperCase();
+  const name   = getVal('r-name').trim();
+  const grade  = getVal('r-grade').trim();
+  const gpa    = getVal('r-gpa').trim();
+  const div    = getVal('r-div').trim();
+  const status = getVal('r-status');
+  if (!id || !name || !grade) { toast('⚠️ Fill in ID, name and class.'); return; }
+  // Check duplicate ID
+  if (resultsData.find(r => r.id === id)) { toast('⚠️ Symbol/ID already exists.'); return; }
+  resultsData.unshift({ id, name, grade, gpa, div, status });
+  save('school_results', resultsData);
+  setVal('r-id',''); setVal('r-name',''); setVal('r-grade',''); setVal('r-gpa',''); setVal('r-div','');
+  renderResults();
+  toast('✅ Result added!');
+}
+
+function deleteResult(i) {
+  if (!confirm('Delete this result?')) return;
+  resultsData.splice(i, 1);
+  save('school_results', resultsData);
+  renderResults();
+  toast('🗑 Result removed.');
+}
+
+function renderResults() {
+  resultsData = load('school_results', []);
+  document.getElementById('cnt-results').textContent = resultsData.length + ' records';
+  const tbody = document.getElementById('resultsBody');
+  tbody.innerHTML = resultsData.length
+    ? resultsData.map((r, i) => `
+        <tr>
+          <td><strong>${r.id}</strong></td>
+          <td>${r.name}</td>
+          <td>${r.grade}</td>
+          <td>${r.gpa || '—'}</td>
+          <td>${r.div || '—'}</td>
+          <td><span class="badge ${r.status==='Pass'?'green':r.status==='Fail'?'red':''}">${r.status}</span></td>
+          <td><button class="btn-sm" style="color:var(--red);border-color:var(--red);" onclick="deleteResult(${i})">🗑</button></td>
+        </tr>`).join('')
+    : `<tr><td colspan="7" style="text-align:center;color:var(--text3);padding:20px;">No results added yet.</td></tr>`;
+}
+
+// ════════════════════════════════════════════════
+// SETTINGS
+// ════════════════════════════════════════════════
+function loadSettingsFields() {
+  settingsData = load('school_settings', DEFAULT_SETTINGS);
+  setVal('s-fullname', settingsData.fullname || '');
+  setVal('s-est', settingsData.est || '');
+  setVal('s-addr', settingsData.addr || '');
+  setVal('s-phone', settingsData.phone || '');
+  setVal('s-email', settingsData.email || '');
+  setVal('s-web', settingsData.web || '');
+  setVal('s-copy', settingsData.copy || '');
+}
+
+function saveSettings() {
+  settingsData = {
+    fullname: getVal('s-fullname'), est: getVal('s-est'),
+    addr: getVal('s-addr'), phone: getVal('s-phone'),
+    email: getVal('s-email'), web: getVal('s-web'),
+    copy: getVal('s-copy')
+  };
+  save('school_settings', settingsData);
+  toast('✅ Settings saved!');
+}
+
+async function clearData(key, label) {
+  if (!confirm(`This will permanently delete all ${label}. Are you sure?`)) return;
+  if (window.DB) await window.DB.removeItem(key);
+  else localStorage.removeItem(key);
+  // Re-init relevant state
+  if (key === 'school_gallery')  { galleryData  = []; renderGalleryAdmin(); }
+  if (key === 'school_teachers') { teachersData = []; renderTeachers(); }
+  if (key === 'school_notices')  { noticesData  = DEFAULT_NOTICES.slice(); save('school_notices', noticesData); renderNotices(); }
+  if (key === 'school_results')  { resultsData  = []; renderResults(); }
+  if (key === 'school_calendar') { calendarData = DEFAULT_CALENDAR.slice(); save('school_calendar', calendarData); renderCalendar(); }
+  toast(`🗑 All ${label} cleared.`);
+}
+
+// ════════════════════════════════════════════════
+// SECURITY — CHANGE PIN
+// ════════════════════════════════════════════════
+async function changePin() {
+  const current = document.getElementById('sec-current').value.trim();
+  const newPin  = document.getElementById('sec-new').value.trim();
+  const confirm2 = document.getElementById('sec-confirm').value.trim();
+  const msg     = document.getElementById('sec-msg');
+
+  ADMIN_PIN = load('admin_pin', DEFAULT_PIN);
+
+  if (current !== ADMIN_PIN) { msg.style.color = 'var(--red)'; msg.textContent = '❌ Current PIN is incorrect.'; return; }
+  if (newPin.length < 4) { msg.style.color = 'var(--red)'; msg.textContent = '❌ PIN must be at least 4 digits.'; return; }
+  if (newPin !== confirm2) { msg.style.color = 'var(--red)'; msg.textContent = '❌ New PINs do not match.'; return; }
+  if (!/^\d+$/.test(newPin)) { msg.style.color = 'var(--red)'; msg.textContent = '❌ PIN must be numbers only.'; return; }
+
+  ADMIN_PIN = newPin;
+  if (window.DB_PIN) await window.DB_PIN.set(ADMIN_PIN);
+  else save('admin_pin', ADMIN_PIN);
+  document.getElementById('currentPinDisplay').textContent = ADMIN_PIN;
+  document.getElementById('sec-current').value = '';
+  document.getElementById('sec-new').value = '';
+  document.getElementById('sec-confirm').value = '';
+  msg.style.color = 'var(--green)';
+  msg.textContent = '✅ PIN changed successfully!';
+  toast('🔑 PIN updated!');
+}
+
+// ════════════════════════════════════════════════
+// HELPERS
+// ════════════════════════════════════════════════
+function getVal(id) {
+  const el = document.getElementById(id);
+  return el ? el.value : '';
+}
+function setVal(id, val) {
+  const el = document.getElementById(id);
+  if (el) el.value = val;
+}
+
+// ════════════════════════════════════════════════
+// INIT
+// ════════════════════════════════════════════════
+function initApp() {
+  const doInit = () => {
+    heroData     = load('school_hero',     DEFAULT_HERO);
+    statsData    = load('school_stats',    DEFAULT_STATS);
+    tickerEn     = load('school_ticker_en', DEFAULT_TICKER_EN);
+    tickerNp     = load('school_ticker_np', DEFAULT_TICKER_NP);
+    noticesData  = load('school_notices',  DEFAULT_NOTICES);
+    galleryData  = load('school_gallery',  []);
+    teachersData = load('school_teachers', []);
+    feesData     = load('school_fees',     DEFAULT_FEES);
+    calendarData = load('school_calendar', DEFAULT_CALENDAR);
+    resultsData  = load('school_results',  []);
+    settingsData = load('school_settings', DEFAULT_SETTINGS);
+    ADMIN_PIN    = load('admin_pin',       DEFAULT_PIN);
+    showPanel('dashboard');
+  };
+
+  if (window.DB) window.DB.onReady(doInit);
+  else doInit();
+}
+
+// ════════════════════════════════════════════════
+// QR LOGIN
+// ════════════════════════════════════════════════
+
+function switchLoginTab(tab) {
+  const isPin = tab === 'pin';
+  document.getElementById('loginTabPin').style.display = isPin ? '' : 'none';
+  document.getElementById('loginTabQr').style.display  = isPin ? 'none' : '';
+  document.getElementById('tabPin').style.background   = isPin ? 'var(--text)' : 'none';
+  document.getElementById('tabPin').style.color        = isPin ? 'var(--bg)' : 'var(--text2)';
+  document.getElementById('tabQr').style.background    = isPin ? 'none' : 'var(--text)';
+  document.getElementById('tabQr').style.color         = isPin ? 'var(--text2)' : 'var(--bg)';
+  if (!isPin) generateQR();
+}
+
+async function generateQR() {
+  if (!window.DB_QR) {
+    document.getElementById('qrStatus').textContent = '⚠️ Firebase not configured yet.';
+    return;
+  }
+  document.getElementById('qrStatus').textContent = '⏳ Generating...';
+  const token = await window.DB_QR.createSession();
+  const url   = window.location.origin + window.location.pathname + '?qr=' + token;
+
+  const script = document.createElement('script');
+  script.src = 'https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js';
+  script.onload = () => {
+    const canvas = document.getElementById('qrCanvas');
+    const ctx = canvas.getContext('2d');
+    ctx.clearRect(0, 0, 180, 180);
+    const tmp = document.createElement('div');
+    new QRCode(tmp, { text: url, width: 180, height: 180, correctLevel: QRCode.CorrectLevel.H });
+    setTimeout(() => {
+      const img = tmp.querySelector('img') || tmp.querySelector('canvas');
+      if (img) {
+        const i = new Image();
+        i.onload = () => ctx.drawImage(i, 0, 0, 180, 180);
+        i.src = img.src || img.toDataURL();
+      }
+    }, 200);
+  };
+  if (!window.QRCode) document.head.appendChild(script);
+  else script.onload();
+
+  document.getElementById('qrStatus').textContent = '✅ Expires in 5 minutes. Scan with your phone.';
+
+  let polls = 0;
+  const interval = setInterval(async () => {
+    polls++;
+    if (polls > 60) { clearInterval(interval); document.getElementById('qrStatus').textContent = '⏰ Expired. Tap Regenerate.'; return; }
+  }, 5000);
+}
+
+async function handleQRLogin() {
+  const params = new URLSearchParams(window.location.search);
+  const token  = params.get('qr');
+  if (!token) return;
+
+  window.history.replaceState({}, '', window.location.pathname);
+
+  if (!window.DB_QR) { alert('Firebase not configured.'); return; }
+  const valid = await window.DB_QR.verifySession(token);
+  if (valid) {
+    document.getElementById('loginScreen').style.display = 'none';
+    document.getElementById('adminApp').style.display = 'block';
+    document.getElementById('loginErr').textContent = '';
+    initApp();
+  } else {
+    document.getElementById('loginErr').textContent = '❌ QR code expired or already used. Please generate a new one.';
+  }
+}
+
+window.addEventListener('DOMContentLoaded', () => {
+  handleQRLogin();
+});
+</script>
+</body>
+</html>

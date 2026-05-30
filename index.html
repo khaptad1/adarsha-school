@@ -1,0 +1,430 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="light">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Adarsha Sanothimi  Secondary School</title>
+<link rel="stylesheet" href="index.css">
+</head>
+<body>
+
+<!-- ── NAVIGATION ── -->
+<nav>
+  <div class="nav-logo" id="nav-logo-trigger" onclick="handleAdminKnock()" style="cursor:pointer;user-select:none;">
+    <img src="https://www.adarshasanothimi.edu.np/wp-content/uploads/2020/06/logo.png" alt="School Logo" onerror="this.style.display='none'">
+    <div class="nav-logo-text">
+      Adarsha Sanothimi
+      <em>Higher Secondary School</em>
+    </div>
+  </div>
+  <div class="nav-links">
+    <a id="nl-home" onclick="scrollToSection('home')">Home</a>
+    <a id="nl-about" onclick="scrollToSection('about')">About</a>
+    <a id="nl-programs" onclick="scrollToSection('programs')">Programs</a>
+    <a id="nl-features" onclick="scrollToSection('features')">Facilities</a>
+    <a id="nl-notices" onclick="scrollToSection('notices')">Notices</a>
+    <a id="nl-portal" onclick="scrollToSection('portal')">Result Portal</a>
+    <a id="nl-calendar" onclick="scrollToSection('calendar')">Calendar</a>
+    <a id="nl-faq" onclick="scrollToSection('faq')">FAQs</a>
+    <a id="nl-gallery" onclick="scrollToSection('gallery')">Gallery</a>
+    <a id="nl-teachers" onclick="scrollToSection('teachers')">Teachers</a>
+    <a id="nl-contact" onclick="scrollToSection('contact')" class="btn-p" style="padding:5px 14px;font-size:12.5px;">Admission</a>
+  </div>
+  <div class="nav-right">
+    <button class="btn-lang" id="btn-lang-el" onclick="toggleLang()">नेपाली</button>
+    <button class="btn-theme" onclick="toggleTheme()">☀/☾</button>
+    <!-- Admin access: triple-click the school logo in nav -->
+  </div>
+</nav>
+
+<!-- ── TICKER ── -->
+<div class="ticker">
+  <span class="ticker-tag">📢 Notice</span>
+  <span class="ticker-scroll" id="ticker-text">📢 Admission Open for 2081 BS! | 📝 Grade 11 Entrance Form available | 🏆 SEE 2080 Outstanding Results | 📅 Terminal Exam: Ashadh 5–15</span>
+</div>
+
+<!-- ── HERO ── -->
+<div class="hero" id="home">
+  <div class="hero-badge" id="hero-badge">🇳🇵 Established 2034 BS · Sanothimi, Bhaktapur</div>
+  <h1><span id="hero-h1">Adarsha Sanothimi</span><br><span id="hero-h1s" style="color:var(--text2);font-size:0.72em;">Higher Secondary School</span></h1>
+  <div class="hero-np" id="hero-np">आदर्श सानोठिमी माध्यमिक विद्यालय</div>
+  <div class="hero-slogan" id="hero-slogan">"ज्ञानं परमं भूषणम्" — Knowledge is the Ultimate Ornament</div>
+  <p id="hero-p">A leading government school in Sanothimi, Bhaktapur committed to quality education from ECD to Grade 12 with Science, Management and Humanities streams.</p>
+  <div class="hero-btns">
+    <button class="btn-p" id="hero-btn1" onclick="scrollToSection('contact')">Apply for Admission</button>
+    <button class="btn-o" id="hero-btn2" onclick="scrollToSection('features')">Explore School</button>
+  </div>
+</div>
+
+<!-- ── STATS ── -->
+<div class="stats">
+  <div class="stat"><div class="stat-n" id="s1n">1,800+</div><div class="stat-l" id="s1l">Students Enrolled</div></div>
+  <div class="stat"><div class="stat-n" id="s2n">95.2%</div><div class="stat-l" id="s2l">Pass Rate</div></div>
+  <div class="stat"><div class="stat-n" id="s3n">60+</div><div class="stat-l" id="s3l">Teachers</div></div>
+  <div class="stat"><div class="stat-n" id="s4n">Grade 1–12</div><div class="stat-l" id="s4l">All Levels</div></div>
+  <div class="stat"><div class="stat-n" id="s5n">Science & Mgmt</div><div class="stat-l" id="s5l">+2 Streams</div></div>
+  <div class="stat"><div class="stat-n" id="s6n">40+</div><div class="stat-l" id="s6l">Years of Service</div></div>
+</div>
+
+<!-- ── ABOUT ── -->
+<section id="about">
+  <div class="sec-head">
+    <div class="sec-tag" id="about-tag">About Us</div>
+    <h2 id="about-h">Our School</h2>
+  </div>
+  <div class="about-grid">
+    <div class="about-img">
+      <div class="school-icon">🏫</div>
+      <div class="about-badge" id="about-badge-el">Est. 2034 BS</div>
+    </div>
+    <div class="about-text">
+      <h2>Adarsha Sanothimi H.S. School</h2>
+      <p id="about-p1">Adarsha Sanothimi Higher Secondary School is a government-aided school located in Sanothimi, Bhaktapur. Serving the community since 2034 BS, we provide education from ECD through Grade 12.</p>
+      <p id="about-p2">We offer +2 programs in Science, Management and Humanities under NEB. Our school is known for its dedicated teachers, disciplined environment and strong exam results.</p>
+      <div class="pills">
+        <span class="pill">NEB Affiliated</span>
+        <span class="pill">Government Aided</span>
+        <span class="pill">+2 Science</span>
+        <span class="pill">+2 Management</span>
+        <span class="pill">+2 Humanities</span>
+        <span class="pill">ECD–Grade 12</span>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PROGRAMS ── -->
+<section class="alt" id="programs">
+  <div class="sec-head">
+    <div class="sec-tag" id="prog-tag">Academic Programs</div>
+    <h2 id="prog-h">What We Offer</h2>
+    <p id="prog-p">From early childhood to +2 higher secondary.</p>
+  </div>
+  <div class="prog-grid">
+    <div class="prog-card">
+      <div class="prog-icon">🧸</div>
+      <h3>ECD / Nursery</h3>
+      <p>Early childhood development with play-based learning.</p>
+      <span class="grade-tag">Age 3–5</span>
+    </div>
+    <div class="prog-card">
+      <div class="prog-icon">📖</div>
+      <h3>Primary Level</h3>
+      <p>Strong foundation in core subjects.</p>
+      <span class="grade-tag">Class 1–5</span>
+    </div>
+    <div class="prog-card">
+      <div class="prog-icon">📐</div>
+      <h3>Lower Secondary</h3>
+      <p>Balanced curriculum with co-curricular activities.</p>
+      <span class="grade-tag">Class 6–8</span>
+    </div>
+    <div class="prog-card">
+      <div class="prog-icon">🎓</div>
+      <h3>Secondary (SEE)</h3>
+      <p>SEE preparation with subject specialization.</p>
+      <span class="grade-tag">Class 9–10</span>
+    </div>
+    <div class="prog-card">
+      <div class="prog-icon">🔬</div>
+      <h3>+2 Science</h3>
+      <p>Physics, Chemistry, Biology, Mathematics under NEB.</p>
+      <span class="grade-tag">Grade 11–12</span>
+    </div>
+    <div class="prog-card">
+      <div class="prog-icon">💼</div>
+      <h3>+2 Management</h3>
+      <p>Accountancy, Economics, Business Studies under NEB.</p>
+      <span class="grade-tag">Grade 11–12</span>
+    </div>
+    <div class="prog-card">
+      <div class="prog-icon">📚</div>
+      <h3>+2 Humanities</h3>
+      <p>Social studies, Literature, Sociology under NEB.</p>
+      <span class="grade-tag">Grade 11–12</span>
+    </div>
+  </div>
+</section>
+
+<!-- ── FACILITIES ── -->
+<section id="features">
+  <div class="sec-head">
+    <div class="sec-tag" id="feat-tag">School Facilities</div>
+    <h2 id="feat-h">Our Infrastructure</h2>
+    <p id="feat-p">Modern facilities supporting holistic student development.</p>
+  </div>
+  <div class="features-grid">
+    <div class="feat-card"><div class="feat-icon">🏫</div><h3>Modern Classrooms</h3><p>Well-ventilated rooms with proper seating and blackboards.</p></div>
+    <div class="feat-card"><div class="feat-icon">🔬</div><h3>Science Laboratory</h3><p>Physics, Chemistry and Biology labs with standard equipment.</p></div>
+    <div class="feat-card"><div class="feat-icon">💻</div><h3>Computer Lab</h3><p>Computer education with internet access for all students.</p></div>
+    <div class="feat-card"><div class="feat-icon">📚</div><h3>Library</h3><p>Extensive collection of textbooks, reference books and magazines.</p></div>
+    <div class="feat-card"><div class="feat-icon">⚽</div><h3>Sports Ground</h3><p>Football, volleyball, basketball and indoor sports facilities.</p></div>
+    <div class="feat-card"><div class="feat-icon">🎨</div><h3>Arts & Culture</h3><p>Music, dance, drawing and extracurricular activity rooms.</p></div>
+    <div class="feat-card"><div class="feat-icon">🍽️</div><h3>Canteen</h3><p>Clean and affordable food for students and staff.</p></div>
+    <div class="feat-card"><div class="feat-icon">🚻</div><h3>Clean Toilets</h3><p>Separate sanitation facilities for boys and girls.</p></div>
+  </div>
+</section>
+
+<!-- ── NOTICES ── -->
+<section class="alt" id="notices">
+  <div class="sec-head">
+    <div class="sec-tag" id="notice-tag">Latest Updates</div>
+    <h2 id="notice-h">Notice Board</h2>
+  </div>
+  <div class="notice-wrap" id="noticeBoardWrap">
+    <!-- loaded by JS -->
+  </div>
+</section>
+
+<!-- ── RESULT PORTAL ── -->
+<section id="portal">
+  <div class="sec-head">
+    <div class="sec-tag" id="portal-tag">Result Portal</div>
+    <h2 id="portal-h">Check Your Result</h2>
+    <p id="portal-p">Enter your student ID or symbol number to check exam results.</p>
+  </div>
+  <div class="portal-box">
+    <div class="portal-input-row">
+      <input type="text" id="studentSymbolInput" placeholder="Symbol Number / Student ID">
+      <button class="btn-p" id="portal-btn" onclick="checkResult()">Check Result</button>
+    </div>
+    <div id="resultOutputBox"></div>
+  </div>
+</section>
+
+<!-- ── FEES TABLE ── -->
+<section class="alt">
+  <div class="sec-head">
+    <div class="sec-tag">Fee Structure</div>
+    <h2>Annual Fees 2081 BS</h2>
+  </div>
+  <div class="fees-wrap">
+    <table>
+      <thead><tr><th>Level</th><th>Admission Fee</th><th>Monthly Fee</th><th>Annual Exam Fee</th><th>Remarks</th></tr></thead>
+      <tbody id="feeTbody">
+        <tr><td>ECD / Nursery</td><td>Rs. 1,500</td><td>Rs. 600</td><td>Rs. 500</td><td>Books extra</td></tr>
+        <tr><td>Class 1–5</td><td>Rs. 2,000</td><td>Rs. 700</td><td>Rs. 600</td><td>Uniform required</td></tr>
+        <tr><td>Class 6–8</td><td>Rs. 2,500</td><td>Rs. 800</td><td>Rs. 700</td><td>—</td></tr>
+        <tr><td>Class 9–10 (SEE)</td><td>Rs. 3,000</td><td>Rs. 1,000</td><td>Rs. 1,200</td><td>SEE registration extra</td></tr>
+        <tr><td>+2 Science</td><td>Rs. 5,000</td><td>Rs. 1,500</td><td>Rs. 2,000</td><td>Lab fee extra</td></tr>
+        <tr><td>+2 Management</td><td>Rs. 4,000</td><td>Rs. 1,200</td><td>Rs. 1,800</td><td>—</td></tr>
+        <tr><td>+2 Humanities</td><td>Rs. 3,500</td><td>Rs. 1,000</td><td>Rs. 1,500</td><td>—</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── CALENDAR ── -->
+<section id="calendar">
+  <div class="sec-head">
+    <div class="sec-tag" id="cal-tag">Academic Schedule</div>
+    <h2 id="cal-h">Calendar & Events</h2>
+  </div>
+  <div class="table-wrap">
+    <table>
+      <thead><tr><th>Date (BS)</th><th>Event</th><th>Target Group</th><th>Status</th></tr></thead>
+      <tbody id="calTbody">
+        <tr><td>Baisakh 1, 2081</td><td>New Academic Session Begins</td><td>All Classes</td><td>✅ Completed</td></tr>
+        <tr><td>Jestha 15, 2081</td><td>Grade 11 Entrance Examination</td><td>New +2 Students</td><td>📅 Upcoming</td></tr>
+        <tr><td>Ashadh 5–15, 2081</td><td>First Terminal Examinations</td><td>All Classes</td><td>📅 Scheduled</td></tr>
+        <tr><td>Shrawan 28, 2081</td><td>Parent-Teacher Meeting</td><td>All Parents</td><td>📅 Scheduled</td></tr>
+        <tr><td>Ashwin 1, 2081</td><td>Second Semester Begins</td><td>All Classes</td><td>📅 Scheduled</td></tr>
+        <tr><td>Poush 15–25, 2081</td><td>Second Terminal Examination</td><td>All Classes</td><td>📅 Scheduled</td></tr>
+        <tr><td>Falgun 20, 2081</td><td>Annual Sports Day</td><td>All Students</td><td>📅 Scheduled</td></tr>
+        <tr><td>Chaitra 5–20, 2081</td><td>Final Examinations</td><td>Class 1–12</td><td>📅 Scheduled</td></tr>
+      </tbody>
+    </table>
+  </div>
+</section>
+
+<!-- ── FAQ ── -->
+<section class="alt" id="faq">
+  <div class="sec-head">
+    <div class="sec-tag" id="faq-tag">Help & Support</div>
+    <h2 id="faq-h">Frequently Asked Questions</h2>
+  </div>
+  <div class="faq-wrap">
+    <div class="faq-item">
+      <button class="faq-trigger" onclick="toggleFaq(this)">What documents are required for admission? <span>▼</span></button>
+      <div class="faq-content">For admission you need: Birth certificate, Previous school's Transfer Certificate (TC), Mark sheet/Report card of last class, 4 passport-size photos, Citizenship copy of parents, and Migration certificate if from another district.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger" onclick="toggleFaq(this)">What are the +2 streams available? <span>▼</span></button>
+      <div class="faq-content">We offer three streams under NEB: Science (Physics, Chemistry, Biology/Mathematics), Management (Accountancy, Economics, Business Studies), and Humanities (Social Studies, Literature, Sociology/Psychology). Admission is based on SEE GPA and entrance exam.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger" onclick="toggleFaq(this)">Is there a scholarship program? <span>▼</span></button>
+      <div class="faq-content">Yes. Students with SEE GPA of 3.9 or above may qualify for fee concessions. Economically disadvantaged students can apply for government scholarship. Contact the school office for details.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger" onclick="toggleFaq(this)">What are the school timings? <span>▼</span></button>
+      <div class="faq-content">School runs from Sunday to Friday. Morning session: 10:00 AM – 4:00 PM (winter: 10:00 AM – 3:30 PM). ECD students: 10:00 AM – 2:00 PM. Office timings: 9:00 AM – 5:00 PM.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-trigger" onclick="toggleFaq(this)">How can I check my child's attendance? <span>▼</span></button>
+      <div class="faq-content">Parents can visit the school office to get attendance records. For regular updates, parent-teacher meetings are held every trimester. You may also contact the class teacher directly.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── ADMISSION STEPS ── -->
+<section id="admission">
+  <div class="sec-head">
+    <div class="sec-tag" id="adm-tag">Enroll Now</div>
+    <h2 id="adm-h">Admission Open – 2081 BS</h2>
+    <p id="adm-p">We welcome students for all grades. Complete the steps below and visit school for further process.</p>
+  </div>
+  <div class="adm-box">
+    <div class="steps">
+      <div class="step"><div class="step-n">1</div><p>Fill the inquiry form below</p></div>
+      <div class="step"><div class="step-n">2</div><p>Collect form from school office</p></div>
+      <div class="step"><div class="step-n">3</div><p>Submit form with documents</p></div>
+      <div class="step"><div class="step-n">4</div><p>Entrance test (Grade 6+)</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CONTACT ── -->
+<section class="alt" id="contact">
+  <div class="sec-head">
+    <div class="sec-tag" id="contact-tag">Contact Us</div>
+    <h2 id="contact-h">Get In Touch</h2>
+  </div>
+  <div class="contact-grid">
+    <div class="c-info">
+      <div class="list-box">
+        <h4>📥 Downloads</h4>
+        <button class="btn-sm" onclick="alert('Prospectus_2081.pdf will be available soon.')">📄 Download Prospectus</button>
+        <button class="btn-sm" style="margin-top:7px;" onclick="alert('Booklist_2081.pdf will be available soon.')">📚 Download Booklist</button>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">📍</div>
+        <div><h4>Address</h4><p>Sanothimi, Bhaktapur-16<br>Bagmati Province, Nepal</p></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">📞</div>
+        <div><h4>Phone</h4><p>01-6614322 / 01-6614323</p></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">🌐</div>
+        <div><h4>Website</h4><p><a href="https://www.adarshasanothimi.edu.np" target="_blank" style="color:var(--red);">www.adarshasanothimi.edu.np</a></p></div>
+      </div>
+      <div class="c-item">
+        <div class="c-icon">✉️</div>
+        <div><h4>Email</h4><p>info@adarshasanothimi.edu.np</p></div>
+      </div>
+    </div>
+    <div class="c-form">
+      <h3>Send Admission Inquiry</h3>
+      <div class="form-row"><label>Full Name </label><input type="text" placeholder="Your full name"></div>
+      <div class="form-row"><label>Phone / Email</label><input type="text" placeholder="Phone number or email"></div>
+      <div class="form-row"><label>Desired Grade </label>
+        <select>
+          <option>ECD / Nursery</option>
+          <option>Class 1–5 (Primary)</option>
+          <option>Class 6–8 (Lower Secondary)</option>
+          <option>Class 9–10 (SEE)</option>
+          <option>Grade 11–12 Science</option>
+          <option>Grade 11–12 Management</option>
+          <option>Grade 11–12 Humanities</option>
+        </select>
+      </div>
+      <div class="form-row"><label>Message (Optional)</label><textarea rows="3" placeholder="Any specific question..."></textarea></div>
+      <button class="btn-sub" onclick="alert('Your inquiry has been submitted. We will contact you soon. धन्यवाद!')">Submit Inquiry</button>
+    </div>
+  </div>
+</section>
+
+<!-- ── GALLERY ── -->
+<section id="gallery">
+  <div class="sec-head">
+    <div class="sec-tag" id="gallery-tag">Photo Gallery</div>
+    <h2 id="gallery-h">Our School Life</h2>
+    <p id="gallery-p">Moments captured from classrooms, events and campus life.</p>
+  </div>
+  <div class="gallery-tabs">
+    <button class="gtab active" onclick="filterGallery('all', this)">All</button>
+    <button class="gtab" onclick="filterGallery('events', this)">Events</button>
+    <button class="gtab" onclick="filterGallery('campus', this)">Campus</button>
+    <button class="gtab" onclick="filterGallery('sports', this)">Sports</button>
+    <button class="gtab" onclick="filterGallery('academics', this)">Academics</button>
+  </div>
+  <div class="gallery-grid" id="galleryGrid">
+    <div class="gallery-empty" id="galleryEmpty">
+      <div style="font-size:48px;margin-bottom:12px;">🖼️</div>
+      <p>No photos yet. Admin can upload photos from the Admin Panel.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── TEACHERS ── -->
+<section class="alt" id="teachers">
+  <div class="sec-head">
+    <div class="sec-tag" id="teachers-tag">Our Faculty</div>
+    <h2 id="teachers-h">Meet Our Teachers</h2>
+    <p id="teachers-p">Dedicated educators committed to student success.</p>
+  </div>
+  <div class="teachers-grid" id="teachersGrid">
+    <div class="gallery-empty" id="teachersEmpty">
+      <div style="font-size:48px;margin-bottom:12px;">👩‍🏫</div>
+      <p>No teachers added yet. Admin can add teacher profiles from the Admin Panel.</p>
+    </div>
+  </div>
+</section>
+
+<!-- ── ADMIN LOGIN OVERLAY ── -->
+<div id="adminLoginOverlay" style="display:none;position:fixed;inset:0;z-index:1001;background:var(--bg3);display:none;align-items:center;justify-content:center;">
+  <div style="background:var(--bg);border:1px solid var(--border);border-radius:10px;padding:48px 44px;max-width:400px;width:100%;text-align:center;">
+    <div style="font-size:52px;margin-bottom:16px;">🔐</div>
+    <h2 style="font-size:22px;margin-bottom:6px;">Admin Panel</h2>
+    <p style="color:var(--text3);font-size:13.5px;margin-bottom:30px;">Adarsha Sanothimi Higher Secondary School</p>
+    <input type="password" id="adminLoginPin" placeholder="Enter PIN" maxlength="8"
+      style="width:100%;padding:12px 16px;border:1px solid var(--border);border-radius:6px;background:var(--bg3);color:var(--text);font-size:16px;text-align:center;letter-spacing:6px;outline:none;margin-bottom:14px;"
+      onkeydown="if(event.key==='Enter') doAdminLogin()">
+    <button onclick="doAdminLogin()" style="width:100%;padding:12px;background:var(--text);color:var(--bg);border:none;border-radius:6px;font-size:14.5px;font-weight:600;cursor:pointer;">Login</button>
+    <div id="adminLoginErr" style="color:#c0392b;font-size:13px;margin-top:10px;min-height:18px;"></div>
+    <button onclick="document.getElementById('adminLoginOverlay').style.display='none'" style="background:none;border:none;color:var(--text3);font-size:12px;margin-top:14px;cursor:pointer;">✕ Cancel</button>
+  </div>
+</div>
+
+<div id="toast" style="position:fixed;bottom:28px;right:28px;background:var(--text);color:var(--bg);padding:12px 22px;border-radius:6px;font-size:13.5px;font-weight:500;z-index:9999;opacity:0;transform:translateY(12px);transition:opacity 0.25s,transform 0.25s;pointer-events:none;"></div>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-grid">
+    <div class="footer-brand">
+      <h3 id="footer-brand">Adarsha Sanothimi H.S. School</h3>
+      <p id="footer-p">Quality education for the community of Sanothimi, Bhaktapur since 2034 BS.</p>
+    </div>
+    <div class="footer-col">
+      <h4 id="footer-links">Quick Links</h4>
+      <a onclick="scrollToSection('home')">Home</a>
+      <a onclick="scrollToSection('programs')">Programs</a>
+      <a onclick="scrollToSection('portal')">Result Portal</a>
+      <a onclick="scrollToSection('contact')">Admission</a>
+      <a onclick="scrollToSection('notices')">Notices</a>
+    </div>
+    <div class="footer-col">
+      <h4 id="footer-gov">Affiliations</h4>
+      <a href="https://neb.gov.np" target="_blank">NEB Nepal</a>
+      <a href="https://moest.gov.np" target="_blank">Ministry of Education</a>
+      <a href="https://doe.gov.np" target="_blank">Dept. of Education</a>
+      <a href="https://bhaktapurmun.gov.np" target="_blank">Bhaktapur Municipality</a>
+    </div>
+  </div>
+  <div class="footer-bottom">
+    <p id="footer-copy">© 2081 BS · Adarsha Sanothimi Higher Secondary School · Sanothimi, Bhaktapur · All Rights Reserved</p>
+  </div>
+</footer>
+
+<!-- ── LIGHTBOX ── -->
+<div class="lightbox" id="lightbox">
+  <button class="lightbox-close" onclick="closeLightbox()">✕</button>
+  <img id="lbImg" src="" alt="">
+  <div class="lightbox-caption" id="lbCaption"></div>
+</div>
+
+<script src="api-db.js"></script>
+<script src="index.js" defer></script>
+</body>
+</html>
