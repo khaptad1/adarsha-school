@@ -1,7 +1,5 @@
 // ════════════════════════════════════════════════════════════
 //  api-db.js  —  MySQL API Bridge for Adarsha Sanothimi School
-//  Replaces firebase-db.js  ·  Same window.DB interface
-//  API Server: http://localhost:3001
 // ════════════════════════════════════════════════════════════
 
 (function () {
@@ -9,13 +7,7 @@
 
   const API = 'https://adarsha-school-production.up.railway.app';
 
-  // ── IN-MEMORY CACHE ──────────────────────────────────────
-  // Keeps data available synchronously (for getItem calls)
-  // and mirrors what was last fetched from the server.
   const _cache = {};
-
-  // ── READY SYSTEM ─────────────────────────────────────────
-  // Fires callbacks once initial data is loaded from MySQL.
   let _ready = false;
   const _readyCbs = [];
 
@@ -25,8 +17,6 @@
     _readyCbs.length = 0;
   }
 
-  // ── KEY → API ENDPOINT MAP ────────────────────────────────
-  // Maps localStorage-style keys to REST API routes.
   const KEY_MAP = {
     'school_notices':    { get: '/api/notices',  put: '/api/notices/bulk'  },
     'school_gallery':    { get: '/api/gallery',  put: '/api/gallery/bulk'  },
@@ -34,7 +24,6 @@
     'school_results':    { get: '/api/results',  put: '/api/results/bulk'  },
     'school_fees':       { get: '/api/fees',     put: '/api/fees/bulk'     },
     'school_calendar':   { get: '/api/calendar', put: '/api/calendar/bulk' },
-    // Settings stored as key-value in site_settings table
     'school_hero':       { get: '/api/settings/school_hero',       put: '/api/settings/school_hero'       },
     'school_stats':      { get: '/api/settings/school_stats',      put: '/api/settings/school_stats'      },
     'school_ticker_en':  { get: '/api/settings/school_ticker_en',  put: '/api/settings/school_ticker_en'  },
@@ -43,7 +32,68 @@
     'admin_pin':         { get: '/api/settings/admin_pin',         put: '/api/settings/admin_pin'         },
   };
 
-  // ── FETCH HELPERS ─────────────────────────────────────────
+  // ── TRANSFORM: normalize API data to match what index.js expects ──
+
+  function transformData(key, data) {
+    if (!Array.isArray(data)) return data;
+
+    if (key === 'school_teachers') {
+      return data.map(t => ({
+        name:    t.name    || t.full_name    || '',
+        subject: t.subject || '',
+        qual:    t.qual    || t.qualification || '',
+        photo:   t.photo   || t.photo_url    || null,
+      }));
+    }
+
+    if (key === 'school_notices') {
+      return data.map(n => ({
+        text: n.text  || n.title || '',
+        date: n.date  || (n.published_at ? n.published_at.toString().slice(0,10) : ''),
+        type: n.type  || (n.category === 'achievement' ? 'achievement' : 'official'),
+      }));
+    }
+
+    if (key === 'school_gallery') {
+      return data.map(g => ({
+        caption:  g.caption  || g.title     || '',
+        category: g.category || 'general',
+        data:     g.data     || g.image_url || '',
+      }));
+    }
+
+    if (key === 'school_calendar') {
+      return data.map(e => ({
+        date:   e.date       || e.event_date || '',
+        event:  e.event      || e.title      || '',
+        target: e.target     || e.target_audience || 'All',
+        status: e.status     || '📅 Scheduled',
+      }));
+    }
+
+    if (key === 'school_fees') {
+      return data.map(f => ({
+        level:   f.level   || f.grade    || '',
+        adm:     f.adm     || f.amount   || '',
+        monthly: f.monthly || '',
+        exam:    f.exam    || '',
+        remarks: f.remarks || '—',
+      }));
+    }
+
+    if (key === 'school_results') {
+      return data.map(r => ({
+        id:     r.id     || r.symbol_number || '',
+        name:   r.name   || r.full_name     || '',
+        grade:  r.grade  || r.class         || '',
+        gpa:    r.gpa    || r.marks         || '',
+        div:    r.div    || r.division      || '',
+        status: r.status || 'Pass',
+      }));
+    }
+
+    return data;
+  }
 
   async function apiFetch(url, options = {}) {
     const res = await fetch(API + url, {
@@ -54,41 +104,34 @@
     return res.json();
   }
 
-  // GET — returns parsed JSON value or null
   async function apiGet(key) {
     const route = KEY_MAP[key];
     if (!route) return null;
     try {
       const data = await apiFetch(route.get);
-      // Settings endpoint returns { value: "..." } (JSON string)
-      // List endpoints return arrays directly
       if (data && typeof data === 'object' && 'value' in data) {
-        return data.value; // already a JSON string
+        return data.value;
       }
-      return JSON.stringify(data);
+      const transformed = transformData(key, data);
+      return JSON.stringify(transformed);
     } catch (e) {
       console.warn('[api-db] GET failed for', key, e.message);
       return null;
     }
   }
 
-  // PUT — sends JSON string value, returns true on success
   async function apiPut(key, jsonString) {
     const route = KEY_MAP[key];
     if (!route) return false;
     try {
       let parsed;
       try { parsed = JSON.parse(jsonString); } catch { parsed = jsonString; }
-
-      // List endpoints expect { items: [...] }
-      // Settings endpoints expect { value: "..." }
       let body;
       if (Array.isArray(parsed)) {
         body = { items: parsed };
       } else {
         body = { value: jsonString };
       }
-
       await apiFetch(route.put, {
         method: 'PUT',
         body: JSON.stringify(body),
@@ -99,9 +142,6 @@
       return false;
     }
   }
-
-  // ── PRELOAD ALL DATA ──────────────────────────────────────
-  // Fetch everything on startup so getItem() works synchronously.
 
   async function preloadAll() {
     const keys = Object.keys(KEY_MAP);
@@ -114,11 +154,7 @@
     _fireReady();
   }
 
-  // ── LIVE LISTENERS ────────────────────────────────────────
-  // Polling-based "live" updates (replaces Firestore real-time).
-  // Polls every 30 seconds and calls registered callbacks on change.
-
-  const _listeners = {}; // key → [callback, ...]
+  const _listeners = {};
   let _pollInterval = null;
 
   function startPolling() {
@@ -133,10 +169,8 @@
           (_listeners[key] || []).forEach(cb => { try { cb(); } catch(e) {} });
         }
       }
-    }, 30000); // 30 second poll
+    }, 30000);
   }
-
-  // ── ADMIN LOGIN via API ───────────────────────────────────
 
   async function verifyPin(pin) {
     try {
@@ -144,14 +178,13 @@
         method: 'POST',
         body: JSON.stringify({ username: 'admin', password: pin }),
       });
-      return !!(res && res.success);
+      return !!(res && (res.success || res.token));
     } catch {
-      // Fallback: compare against cached pin
       const cached = _cache['admin_pin'];
       if (cached) {
         try { return JSON.parse(cached) === pin; } catch { return cached === pin; }
       }
-      return pin === '2081'; // last-resort default
+      return pin === 'admin2081';
     }
   }
 
@@ -160,30 +193,23 @@
     _cache['admin_pin'] = JSON.stringify(newPin);
   }
 
-  // ── window.DB INTERFACE ───────────────────────────────────
-  // Matches the API that admin.html and index.js expect.
-
   window.DB = {
     _useFallback: false,
 
-    // Synchronous read from cache (same as localStorage.getItem)
     getItem(key) {
       return key in _cache ? _cache[key] : null;
     },
 
-    // Async write — updates cache + persists to MySQL
     async setItem(key, jsonString) {
       _cache[key] = jsonString;
       await apiPut(key, jsonString);
     },
 
-    // Async delete — removes from cache + clears on server
     async removeItem(key) {
       delete _cache[key];
       const route = KEY_MAP[key];
       if (!route) return;
       try {
-        // Send empty array for lists, empty string for settings
         const isListKey = ['school_notices','school_gallery','school_teachers',
                            'school_results','school_fees','school_calendar'].includes(key);
         const body = isListKey ? { items: [] } : { value: '' };
@@ -193,37 +219,23 @@
       }
     },
 
-    // Register a callback to fire when key changes (live updates)
     on(key, callback) {
       if (!_listeners[key]) _listeners[key] = [];
       _listeners[key].push(callback);
       startPolling();
     },
 
-    // Register a callback to fire once DB is ready
     onReady(callback) {
       if (_ready) { try { callback(); } catch(e) {} }
       else _readyCbs.push(callback);
     },
   };
 
-  // ── window.DB_PIN INTERFACE ───────────────────────────────
-  // Used by admin.html for PIN verify/set.
-
   window.DB_PIN = {
-    async verify(pin) {
-      return verifyPin(pin);
-    },
-    async set(newPin) {
-      return setPin(newPin);
-    },
+    async verify(pin) { return verifyPin(pin); },
+    async set(newPin) { return setPin(newPin); },
   };
 
-  // ── DISABLE QR (Firebase-only feature) ───────────────────
-  // window.DB_QR is not set — admin.html already guards with
-  // `if (!window.DB_QR)` checks so QR login is gracefully hidden.
-
-  // ── BOOT ─────────────────────────────────────────────────
   preloadAll();
 
 })();
